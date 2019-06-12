@@ -1,0 +1,6 @@
+.venv/
+.idea/
+local.txt
+
+db.sqlite3
+*.pyc
