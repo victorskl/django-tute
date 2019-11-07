@@ -1,0 +1,449 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /users/:
+    get:
+      operationId: listUsers
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        url:
+                          type: string
+                          readOnly: true
+                        username:
+                          type: string
+                          description: Required. 150 characters or fewer. Letters,
+                            digits and @/./+/-/_ only.
+                          pattern: ^[\w.@+-]+$
+                          maxLength: 150
+                        email:
+                          type: string
+                          format: email
+                          maxLength: 254
+                        groups:
+                          type: array
+                          items:
+                            type: string
+                          description: The groups this user belongs to. A user will
+                            get all permissions granted to each of their groups.
+                      required:
+                      - username
+          description: ''
+    post:
+      operationId: createUser
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+$
+                  maxLength: 150
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                groups:
+                  type: array
+                  items:
+                    type: string
+                  description: The groups this user belongs to. A user will get all
+                    permissions granted to each of their groups.
+              required:
+              - username
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+$
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  groups:
+                    type: array
+                    items:
+                      type: string
+                    description: The groups this user belongs to. A user will get
+                      all permissions granted to each of their groups.
+                required:
+                - username
+          description: ''
+  /users/{id}/:
+    get:
+      operationId: retrieveUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+$
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  groups:
+                    type: array
+                    items:
+                      type: string
+                    description: The groups this user belongs to. A user will get
+                      all permissions granted to each of their groups.
+                required:
+                - username
+          description: ''
+    put:
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+$
+                  maxLength: 150
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                groups:
+                  type: array
+                  items:
+                    type: string
+                  description: The groups this user belongs to. A user will get all
+                    permissions granted to each of their groups.
+              required:
+              - username
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+$
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  groups:
+                    type: array
+                    items:
+                      type: string
+                    description: The groups this user belongs to. A user will get
+                      all permissions granted to each of their groups.
+                required:
+                - username
+          description: ''
+    patch:
+      operationId: partial_updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+$
+                  maxLength: 150
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                groups:
+                  type: array
+                  items:
+                    type: string
+                  description: The groups this user belongs to. A user will get all
+                    permissions granted to each of their groups.
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+$
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  groups:
+                    type: array
+                    items:
+                      type: string
+                    description: The groups this user belongs to. A user will get
+                      all permissions granted to each of their groups.
+                required:
+                - username
+          description: ''
+    delete:
+      operationId: destroyUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /groups/:
+    get:
+      operationId: listGroups
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        url:
+                          type: string
+                          readOnly: true
+                        name:
+                          type: string
+                          maxLength: 150
+                      required:
+                      - name
+          description: ''
+    post:
+      operationId: createGroup
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  maxLength: 150
+              required:
+              - name
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  name:
+                    type: string
+                    maxLength: 150
+                required:
+                - name
+          description: ''
+  /groups/{id}/:
+    get:
+      operationId: retrieveGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this group.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  name:
+                    type: string
+                    maxLength: 150
+                required:
+                - name
+          description: ''
+    put:
+      operationId: updateGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this group.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  maxLength: 150
+              required:
+              - name
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  name:
+                    type: string
+                    maxLength: 150
+                required:
+                - name
+          description: ''
+    patch:
+      operationId: partial_updateGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this group.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  maxLength: 150
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+                    readOnly: true
+                  name:
+                    type: string
+                    maxLength: 150
+                required:
+                - name
+          description: ''
+    delete:
+      operationId: destroyGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this group.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
