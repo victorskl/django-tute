@@ -1,36 +1,22 @@
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, permissions
-from zzrestauth.quickstart.serializers import UserSerializer, GroupSerializer
+from django.contrib.auth.models import Group, User
+from rest_framework import permissions, viewsets
+
+from zzrestauth.quickstart.serializers import GroupSerializer, UserSerializer
 
 
-# This mixin force everything ReadOnly at View layer.
-# It seems to be precedence all permissions set at upper layers i.e. urls route and settings
-# Experiment with ModelViewSet vs ReadOnlyListViewset
-class ReadOnlyListViewset(
-    viewsets.mixins.RetrieveModelMixin,
-    viewsets.mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    pass
-
-
-# class UserViewSet(ReadOnlyListViewset):
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
-# class GroupViewSet(viewsets.ModelViewSet):
-class GroupViewSet(ReadOnlyListViewset):
+class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by("name")
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]

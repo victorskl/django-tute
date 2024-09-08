@@ -8,20 +8,17 @@ Django tutorials
 mkdir -p django-tute
 cd django-tute
 
-python3 -m pip install virtualenv
-virtualenv -p /usr/local/bin/python3 venv
-source venv/bin/activate
-(venv) which python
-(venv) which pip
-(venv) pip list
-(venv) pip install django==2.2
-(venv) python -m django --version
-(venv) deactivate
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install Django
+python -m django --version
+5.1.1
 ```
 
 ## Getting Started
 
-- https://docs.djangoproject.com/en/2.2/intro/tutorial01/
+- https://docs.djangoproject.com/en/5.1/intro/tutorial01/
 
 ### Create a Django project
 
@@ -32,11 +29,12 @@ tree aasite
 aasite
 ├── aasite
 │   ├── __init__.py
+│   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
 └── manage.py
-pushd aasite 
+pushd aasite
 python manage.py runserver
 (CTRL+C)
 popd
@@ -55,7 +53,7 @@ popd
 
 #### Understanding Django project and application
 
-- https://docs.djangoproject.com/en/2.2/ref/applications/
+- https://docs.djangoproject.com/en/5.1/ref/applications/
 
 ```
 pushd absite
@@ -72,12 +70,20 @@ popd
 
 ## Django REST Framework
 
+```
+pip install djangorestframework
+```
+
+```
+python -c "import rest_framework; print(rest_framework.VERSION)"
+3.15.2
+```
+
 ### Django REST quickstart
 
 - https://www.django-rest-framework.org/tutorial/quickstart/
 
 ```
-pip install djangorestframework
 django-admin startproject zzrest
 cd zzrest/zzrest
 django-admin startapp quickstart
@@ -86,26 +92,18 @@ python manage.py migrate
 python manage.py createsuperuser --email admin@example.com --username admin
 python manage.py runserver
 
-curl -H 'Accept: application/json; indent=4' -u admin:password123 http://127.0.0.1:8000/users/
+curl -H "Accept: application/json; indent=4" -u admin:123456 http://127.0.0.1:8000/users/
 curl -s http://127.0.0.1:8000/users/ | jq
 open -a Safari http://127.0.0.1:8000
 ```
 
-Generating an OpenAPI Schema
-- https://www.django-rest-framework.org/api-guide/schemas/
-
-```
-pip install pyyaml
-python manage.py generateschema > openapi-schema.yml
-
-open -a Safari http://localhost:8000/openapi
-```
-
 ### Django REST with auth
 
-```
-pip install -U 'drf-yasg[validation]'
+- https://www.django-rest-framework.org/api-guide/permissions/
+- https://www.django-rest-framework.org/api-guide/authentication/
+- https://www.django-rest-framework.org/topics/documenting-your-api/
 
+```
 django-admin startproject zzrestauth
 cd zzrestauth/zzrestauth
 django-admin startapp quickstart
@@ -115,26 +113,14 @@ python manage.py createsuperuser --email admin@example.com --username admin
 python manage.py runserver
 ```
 
-API Document
-```
-open -a Safari http://localhost:8000
-open -a Safari http://localhost:8000/swagger/
-open -a Safari http://localhost:8000/redoc/
-
-curl -s http://localhost:8000/swagger.json | jq
-curl -s http://localhost:8000/swagger.yaml
-```
-
 Auth Token
 ```
-open -a Safari http://localhost:8000/admin/authtoken/token/
+python manage.py drf_create_token --help
 
-curl -s -X GET http://localhost:8000/users/ | jq
-{
-  "detail": "Authentication credentials were not provided."
-}
+python manage.py drf_create_token admin
+Generated token d1ec2c19f942ad9e8a9c836cc4319927cbe59f7e for user admin
 
-curl -s -X GET http://localhost:8000/users/ -H 'Authorization: Token f8f7ddc2f951663364cdc8c1c946c58d6d752ace' | jq
+curl -s -X GET http://localhost:8000/users/ -H "Authorization: Token d1ec2c19f942ad9e8a9c836cc4319927cbe59f7e" | jq
 {
   "count": 1,
   "next": null,
@@ -148,18 +134,32 @@ curl -s -X GET http://localhost:8000/users/ -H 'Authorization: Token f8f7ddc2f95
     }
   ]
 }
-
-python manage.py drf_create_token --help
 ```
 
-Permissions
-- https://www.django-rest-framework.org/api-guide/permissions/
+Get token by using username and password
+```
+curl -s -X POST -d '{"username": "admin", "password": "123456"}' -H "Content-Type: application/json" "http://localhost:8000/api-token-auth/" | jq
+{
+  "token": "d1ec2c19f942ad9e8a9c836cc4319927cbe59f7e"
+}
+```
 
-Authentication
-- https://www.django-rest-framework.org/api-guide/authentication/
+You also can manage tokens through admin console
+- http://localhost:8000/admin/authtoken/tokenproxy/
 
-Documenting your API
-- https://www.django-rest-framework.org/topics/documenting-your-api/
+API Documentation
+- https://drf-spectacular.readthedocs.io/en/latest/readme.html
 
-Yet Another Swagger Generator (drf-yasg)
-- https://github.com/axnsan12/drf-yasg/
+```
+pip install drf-spectacular
+```
+
+```
+python manage.py spectacular --help
+python manage.py spectacular --format openapi-json | jq
+python manage.py spectacular | yq
+python manage.py spectacular | yq > openapi.yaml
+```
+
+- http://localhost:8000/api/schema/swagger-ui/
+- http://localhost:8000/api/schema/redoc/
